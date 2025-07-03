@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-// Define o grau máximo do polinômio
 #define GRAU_MAX 10
 
-// Função para inicializar um vetor com zeros
-void inicializar_polinomio(int p[]) {
-    for (int i = 0; i <= GRAU_MAX; i++) {
+// Função para colocar todos os coeficientes como 0
+void inicializar_polinomio(int p[], int tamanho) {
+    for (int i = 0; i <= tamanho; i++) {
         p[i] = 0;
     }
 }
 
-// Função para ler os coeficientes de um polinômio
+// Função para o usuário digitar os coeficientes do polinômio
 void ler_polinomio(int p[]) {
     printf("Digite os coeficientes do polinômio de grau até %d:\n", GRAU_MAX);
     for (int i = 0; i <= GRAU_MAX; i++) {
@@ -20,10 +19,10 @@ void ler_polinomio(int p[]) {
     }
 }
 
-// Função para imprimir o polinômio no formato desejado
-void imprimir_polinomio(int p[]) {
+// Função para mostrar o polinômio de forma organizada com grau personalizado
+void imprimir_polinomio(int p[], int grau_max) {
     bool primeiro = true;
-    for (int i = 0; i <= GRAU_MAX; i++) {
+    for (int i = 0; i <= grau_max; i++) {
         if (p[i] != 0) {
             if (!primeiro && p[i] > 0)
                 printf(" + ");
@@ -48,18 +47,18 @@ void imprimir_polinomio(int p[]) {
             primeiro = false;
         }
     }
-    if (primeiro) printf("0"); // caso todos os coeficientes sejam zero
+    if (primeiro) printf("0");
     printf("\n");
 }
 
-// Soma dois polinômios
+// Soma p1 + p2 e guarda o resultado
 void somar(int p1[], int p2[], int resultado[]) {
     for (int i = 0; i <= GRAU_MAX; i++) {
         resultado[i] = p1[i] + p2[i];
     }
 }
 
-// Subtrai dois polinômios
+// Subtrai p1 - p2
 void subtrair(int p1[], int p2[], int resultado[]) {
     for (int i = 0; i <= GRAU_MAX; i++) {
         resultado[i] = p1[i] - p2[i];
@@ -68,34 +67,43 @@ void subtrair(int p1[], int p2[], int resultado[]) {
 
 // Multiplica dois polinômios
 void multiplicar(int p1[], int p2[], int resultado[]) {
+    // Inicializa o array resultado com zeros
     for (int i = 0; i <= GRAU_MAX * 2; i++) {
         resultado[i] = 0;
     }
 
+    // Realiza a multiplicação
     for (int i = 0; i <= GRAU_MAX; i++) {
         for (int j = 0; j <= GRAU_MAX; j++) {
-            resultado[i + j] += p1[i] * p2[j];
+            if (i + j <= GRAU_MAX * 2) {
+                resultado[i + j] += p1[i] * p2[j];
+            }
         }
     }
 }
 
-// Função principal
+// Função principal com menu interativo
 int main() {
     int p1[GRAU_MAX + 1], p2[GRAU_MAX + 1];
-    int resultado[GRAU_MAX * 2 + 1]; // multiplicação pode gerar grau até 20
+    int resultado[GRAU_MAX * 2 + 1]; // Para acomodar multiplicação até grau 20
     int opcao;
 
-    inicializar_polinomio(p1);
-    inicializar_polinomio(p2);
+    inicializar_polinomio(p1, GRAU_MAX);
+    inicializar_polinomio(p2, GRAU_MAX);
+    inicializar_polinomio(resultado, GRAU_MAX * 2);
 
     do {
-        printf("\nMenu:\n");
-        printf("1 - Ler dados dos polinômios\n");
-        printf("2 - Somar\n");
-        printf("3 - Subtrair\n");
-        printf("4 - Multiplicar\n");
-        printf("5 - Sair\n");
-        printf("Escolha uma opção: ");
+        // Layout do menu
+        printf("\n====================================\n");
+        printf("      ARITMÉTICA DE POLINÔMIOS      \n");
+        printf("====================================\n");
+        printf(" 1 - Ler dados dos polinômios\n");
+        printf(" 2 - Somar polinômios\n");
+        printf(" 3 - Subtrair polinômios\n");
+        printf(" 4 - Multiplicar polinômios\n");
+        printf(" 5 - Sair do programa\n");
+        printf("====================================\n");
+        printf("Escolha uma opção (1 a 5): ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -106,39 +114,39 @@ int main() {
                 ler_polinomio(p2);
 
                 printf("\nPolinômio 1: ");
-                imprimir_polinomio(p1);
+                imprimir_polinomio(p1, GRAU_MAX);
                 printf("Polinômio 2: ");
-                imprimir_polinomio(p2);
+                imprimir_polinomio(p2, GRAU_MAX);
                 break;
 
             case 2:
                 somar(p1, p2, resultado);
                 printf("\nPolinômio 1: ");
-                imprimir_polinomio(p1);
+                imprimir_polinomio(p1, GRAU_MAX);
                 printf("Polinômio 2: ");
-                imprimir_polinomio(p2);
+                imprimir_polinomio(p2, GRAU_MAX);
                 printf("Soma: ");
-                imprimir_polinomio(resultado);
+                imprimir_polinomio(resultado, GRAU_MAX);
                 break;
 
             case 3:
                 subtrair(p1, p2, resultado);
                 printf("\nPolinômio 1: ");
-                imprimir_polinomio(p1);
+                imprimir_polinomio(p1, GRAU_MAX);
                 printf("Polinômio 2: ");
-                imprimir_polinomio(p2);
+                imprimir_polinomio(p2, GRAU_MAX);
                 printf("Subtração: ");
-                imprimir_polinomio(resultado);
+                imprimir_polinomio(resultado, GRAU_MAX);
                 break;
 
             case 4:
                 multiplicar(p1, p2, resultado);
                 printf("\nPolinômio 1: ");
-                imprimir_polinomio(p1);
+                imprimir_polinomio(p1, GRAU_MAX);
                 printf("Polinômio 2: ");
-                imprimir_polinomio(p2);
+                imprimir_polinomio(p2, GRAU_MAX);
                 printf("Multiplicação: ");
-                imprimir_polinomio(resultado);
+                imprimir_polinomio(resultado, GRAU_MAX * 2);
                 break;
 
             case 5:
